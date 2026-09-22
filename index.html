@@ -2,416 +2,118 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>guestbook // @salmontic</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono&family=VT323&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>~*~ salmontic's guestbook ~*~</title>
 <style>
-  * { box-sizing: border-box; }
-  
-  html, body {
-    width: 100%;
-    min-height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
+  html { background: #111; }
   body {
-    font-family: 'Space Mono', monospace;
-    color: #2b2419;
-    background-color: #e8dcc0;
-    background-image:
-        radial-gradient(ellipse at 20% 20%, rgba(255, 250, 230, 0.5), transparent 60%),
-        radial-gradient(ellipse at 80% 70%, rgba(120, 90, 50, 0.15), transparent 60%),
-        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.02) 0px, rgba(0, 0, 0, 0.02) 1px, transparent 1px, transparent 3px);
-    background-attachment: fixed;
-    position: relative;
-  }
-
-  .grain {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    z-index: 20;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
-    opacity: .30;
-    mix-blend-mode: multiply;
-    transform: translateZ(0);
-  }
-
-  .vignette {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 19;
-    box-shadow: inset 0 0 160px rgba(40, 25, 10, .35);
-    transform: translateZ(0);
-  }
-
-  .dust {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 1;
-    overflow: hidden;
-  }
-  .dust span {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: rgba(255, 245, 220, .8);
-    animation: drift linear infinite;
-    will-change: transform;
-  }
-  .dust span:nth-child(1) { left: 10%; top: 100%; animation-duration: 16s; }
-  .dust span:nth-child(2) { left: 25%; top: 100%; animation-duration: 20s; animation-delay: 3s; }
-  .dust span:nth-child(3) { left: 40%; top: 100%; animation-duration: 14s; animation-delay: 1s; }
-  .dust span:nth-child(4) { left: 55%; top: 100%; animation-duration: 22s; animation-delay: 5s; }
-  .dust span:nth-child(5) { left: 68%; top: 100%; animation-duration: 18s; animation-delay: 2s; }
-  .dust span:nth-child(6) { left: 80%; top: 100%; animation-duration: 15s; animation-delay: 4s; }
-  .dust span:nth-child(7) { left: 92%; top: 100%; animation-duration: 19s; animation-delay: 6s; }
-  .dust span:nth-child(8) { left: 48%; top: 100%; animation-duration: 13s; animation-delay: 7s; }
-
-  @keyframes drift {
-    0% { transform: translate3d(0, 0, 0); opacity: 0; }
-    10% { opacity: .7; }
-    90% { opacity: .4; }
-    100% { transform: translate3d(15px, -110vh, 0); opacity: 0; }
-  }
-
-  .wrap {
-    position: relative;
-    z-index: 2;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 30px 16px 60px;
-  }
-
-  .back-link {
-    display: inline-block;
-    font-family: 'VT323', monospace;
-    font-size: 18px;
-    letter-spacing: 1px;
-    color: #2b2419;
-    text-decoration: none;
-    border-bottom: 1px solid #2b2419;
-    margin-bottom: 24px;
-    transition: opacity 0.15s ease;
-  }
-  .back-link:hover { opacity: 0.6; }
-
-  .craft-card {
-    background: #fffef2;
-    border: 1px solid rgba(43, 36, 25, 0.15);
-    padding: 24px 20px 20px;
-    position: relative;
-    box-shadow: 6px 8px 18px rgba(40, 25, 10, 0.18);
-    transform: rotate(-0.5deg);
-  }
-
-  .tape-top {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%) rotate(1deg);
-    width: 100px;
-    height: 24px;
-    background: rgba(235, 220, 190, 0.75);
-    border-left: 2px dashed rgba(180, 160, 130, 0.5);
-    border-right: 2px dashed rgba(180, 160, 130, 0.5);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  }
-
-  .postcard-stamp {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 38px;
-    height: 44px;
-    border: 1px dashed #2b2419;
-    padding: 3px;
-    background: #fbf7ee;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'VT323', monospace;
-    font-size: 11px;
-    color: #d9534f;
-    text-align: center;
-    line-height: 1;
-    transform: rotate(3deg);
-  }
-
-  h1.title {
-    font-family: 'VT323', monospace;
-    font-size: 32px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin: 0 0 2px;
-    color: #2b2419;
-  }
-
-  .subtitle {
-    font-family: 'VT323', monospace;
-    font-size: 16px;
-    color: #785a32;
-    margin: 0 0 16px;
-  }
-
-  .divider {
-    height: 1px;
-    background: repeating-linear-gradient(90deg, #2b2419 0, #2b2419 4px, transparent 4px, transparent 8px);
-    margin: 18px 0;
-    opacity: 0.4;
-  }
-
-  .field-group {
-    margin-top: 12px;
-  }
-
-  label {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    font-family: 'VT323', monospace;
-    font-size: 18px;
-    letter-spacing: 1px;
-    color: #2b2419;
-  }
-
-  label .tag {
-    font-size: 13px;
-    color: #8c7353;
-  }
-
-  input[type="text"], input[type="email"], textarea {
-    width: 100%;
-    margin-top: 4px;
-    padding: 8px 10px;
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    color: #2b2419;
-    background: #fbf7ee;
-    border: 2px solid #2b2419;
-    border-radius: 0;
-    outline: none;
-    box-shadow: 2px 2px 0px #2b2419;
-    transition: all 0.15s ease;
-  }
-
-  input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
-    background: #fff;
-    box-shadow: 3px 3px 0px #d9534f;
-    border-color: #2b2419;
-  }
-
-  textarea { min-height: 85px; resize: vertical; }
-  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-
-  .send-btn {
-    display: inline-block;
-    width: 100%;
-    margin-top: 18px;
-    padding: 10px 14px;
-    font-family: 'VT323', monospace;
-    font-size: 20px;
-    letter-spacing: 2px;
-    text-transform: lowercase;
-    color: #fbf7ee;
-    background: #2b2419;
-    border: 2px solid #2b2419;
-    box-shadow: 3px 3px 0px #2b2419;
-    cursor: pointer;
-    transition: all 0.1s ease;
-  }
-
-  .send-btn:hover {
-    background: #fbf7ee;
-    color: #1a150e;
-    box-shadow: 4px 4px 0px #d9534f;
-  }
-
-  .send-btn:disabled { opacity: 0.6; cursor: wait; }
-
-  #status {
-    margin: 10px 0 0;
-    font-family: 'VT323', monospace;
-    font-size: 16px;
-    text-align: center;
-    min-height: 1.3em;
-    color: #2b2419;
-  }
-  #status.err { color: #d9534f; }
-
-  .counter {
-    margin-top: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-family: 'VT323', monospace;
-    font-size: 16px;
-    color: #666;
-  }
-
-  .counter .odometer {
-    display: flex;
-    gap: 2px;
-    padding: 2px 4px;
-    background: #2b2419;
-    border-radius: 2px;
-  }
-
-  .counter .odometer span {
-    display: inline-block;
-    width: 12px;
-    text-align: center;
-    font-family: 'VT323', monospace;
-    font-size: 16px;
-    color: #fbf7ee;
-  }
-
-  #entries {
-    list-style: none;
-    margin: 20px 0 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  #entries li {
-    position: relative;
-    padding: 14px;
-    background: #fbf7ee;
-    border: 1px solid #2b2419;
-    box-shadow: 3px 3px 0 #2b2419;
-    transform: rotate(0.4deg);
-  }
-
-  #entries li:nth-child(even) {
-    transform: rotate(-0.6deg);
-  }
-
-  #entries li.empty {
-    text-align: center;
-    color: #666;
-    font-family: 'VT323', monospace;
-    font-size: 17px;
-    box-shadow: none;
-    background: transparent;
-    border: 1px dashed #8c7353;
-    transform: none;
-  }
-
-  .entry-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-
-  .entry-name {
-    padding: 2px 8px;
-    font-family: 'VT323', monospace;
-    font-size: 18px;
-    color: #fbf7ee;
-    background: #2b2419;
-    border-radius: 2px;
-  }
-
-  .entry-email {
-    font-family: 'VT323', monospace;
-    font-size: 14px;
-    color: #d9534f;
-    text-decoration: none;
-  }
-  .entry-email:hover { text-decoration: underline; }
-
-  #entries p {
     margin: 0;
-    font-family: 'Space Mono', monospace;
-    font-size: 13px;
-    line-height: 1.45;
-    color: #2b2419;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
+    color: #d7e9ff;
+    background: #17264a;
+    font-family: "Courier New", monospace;
+    font-size: 14px;
+    line-height: 1.4;
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    .dust span { animation: none; opacity: 0; }
-  }
+  a { color: #63d8ff; }
+  a:visited { color: #d69cff; }
+  a:hover { color: #fff; background: #174a80; }
+  .page { width: min(760px, calc(100% - 24px)); margin: 18px auto; }
+  .topline { color: #ffea6b; text-align: center; font-size: 12px; margin-bottom: 8px; }
+  .window { border: 3px ridge #b7c7e6; background: #273866; box-shadow: 6px 6px #080d1b; }
+  .titlebar { padding: 4px 8px; color: #fff; background: linear-gradient(#3d78b8, #14325f); border-bottom: 2px solid #a8d8ff; font-weight: bold; }
+  .titlebar .buttons { float: right; color: #111; letter-spacing: 3px; background: #b7c7e6; padding: 0 3px; }
+  .content { padding: 14px; }
+  header { text-align: center; padding: 12px 6px; background: #101a38; border: 2px inset #8197c0; }
+  h1 { margin: 0; color: #7ee8ff; font-family: Impact, "Arial Black", sans-serif; font-size: clamp(26px, 7vw, 45px); letter-spacing: 4px; text-shadow: 3px 3px #561b8f; }
+  .subtitle { color: #ffeb70; font-size: 13px; }
+  marquee { color: #ff8fe3; margin: 10px 0; border-top: 1px dashed #6b9ac7; border-bottom: 1px dashed #6b9ac7; padding: 3px; }
+  .columns { display: grid; grid-template-columns: 155px 1fr; gap: 14px; margin-top: 14px; }
+  .sidebar, .main { border: 2px outset #8298c2; background: #1b2b54; padding: 10px; }
+  .sidebar h2, .main h2 { color: #ffea6b; font-size: 16px; margin: 0 0 8px; border-bottom: 1px dotted #83b8e6; padding-bottom: 4px; }
+  .nav a { display: block; margin: 6px 0; padding: 4px; border: 1px solid #52729e; background: #111d3b; text-decoration: none; }
+  .badge { display: block; margin: 12px auto; padding: 5px 2px; text-align: center; color: #111; background: #ffea6b; border: 2px outset #fff3a1; font-size: 11px; font-weight: bold; }
+  .blink { animation: blink 1s steps(2, start) infinite; }
+  @keyframes blink { 50% { visibility: hidden; } }
+  .notice { color: #ffc4f2; border: 1px dashed #e082ce; background: #321d50; padding: 7px; font-size: 12px; }
+  hr { border: 0; border-top: 1px dotted #8db7e4; margin: 16px 0; }
+  label { display: block; color: #9fe8ff; margin-top: 10px; font-weight: bold; }
+  label small { color: #b4bfd8; font-weight: normal; }
+  input, textarea { width: 100%; box-sizing: border-box; margin-top: 3px; padding: 7px; color: #111; background: #edf5ff; border: 2px inset #a8c6e8; font: 13px "Courier New", monospace; }
+  textarea { min-height: 100px; resize: vertical; }
+  input:focus, textarea:focus { outline: 2px solid #ffea6b; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  button { margin-top: 12px; padding: 7px 14px; color: #111; background: #ffea6b; border: 3px outset #fff3a1; font: bold 14px "Courier New", monospace; cursor: pointer; }
+  button:active { border-style: inset; }
+  button:disabled { opacity: .6; cursor: wait; }
+  #status { min-height: 1.4em; color: #8dffb0; font-weight: bold; }
+  #status.err { color: #ff8a9c; }
+  .counter { margin: 12px 0; color: #cbd6f1; text-align: center; }
+  .digits { display: inline-flex; padding: 2px 5px; background: #050505; border: 2px inset #777; color: #54ff54; letter-spacing: 2px; }
+  #entries { list-style: none; padding: 0; margin: 12px 0 0; }
+  #entries li { margin: 10px 0; padding: 9px; background: #101b38; border: 2px ridge #6986b5; }
+  #entries li.empty { color: #aab9d7; text-align: center; border-style: dashed; }
+  .entry-head { color: #ffea6b; border-bottom: 1px dotted #607eaa; padding-bottom: 4px; margin-bottom: 6px; }
+  .entry-email { float: right; color: #ff9cdd; font-size: 12px; }
+  #entries p { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; color: #e0edff; }
+  footer { text-align: center; color: #9fb2d4; font-size: 11px; margin-top: 16px; }
+  .buttons-row { color: #111; background: #d2e4ff; display: inline-block; padding: 3px 8px; border: 2px outset #fff; margin: 5px 2px; font-size: 11px; }
+  @media (max-width: 560px) { .columns { grid-template-columns: 1fr; } .sidebar { order: 2; } }
+  @media (prefers-reduced-motion: reduce) { .blink { animation: none; } }
 </style>
 </head>
 <body>
-
-<div class="dust">
-  <span></span><span></span><span></span><span></span>
-  <span></span><span></span><span></span><span></span>
-</div>
-
-<div class="grain"></div>
-<div class="vignette"></div>
-
-<div class="wrap">
-  <a href="index.html" target="_top" class="back-link">← back to homepage</a>
-
-  <div class="craft-card">
-    <div class="tape-top"></div>
-    <div class="postcard-stamp">AIR<br>MAIL</div>
-
-    <h1 class="title">guestbook</h1>
-    <p class="subtitle">leave a note before you go —</p>
-
-    <div class="divider"></div>
-
-    <form id="gb-form" autocomplete="off">
-      <div class="field-group">
-        <label for="gb-name">your name <span class="tag">(required)</span></label>
-        <input type="text" id="gb-name" maxlength="40" placeholder="anonymous wanderer">
+<div class="page">
+  <div class="topline">*** YOU ARE VISITOR #000001 ***</div>
+  <div class="window">
+    <div class="titlebar">guestbook.exe <span class="buttons">_ □ X</span></div>
+    <div class="content">
+      <header>
+        <h1>♡ SALMONTIC'S GUESTBOOK ♡</h1>
+        <div class="subtitle">welcome to my little corner of the internet!</div>
+      </header>
+      <marquee scrollamount="4">☆ leave a message ☆ say hello ☆ sign the guestbook ☆ thanks for visiting ☆</marquee>
+      <div class="columns">
+        <aside class="sidebar">
+          <h2>navigation</h2>
+          <nav class="nav">
+            <a href="index.html">[ home ]</a>
+            <a href="#sign">[ sign guestbook ]</a>
+            <a href="#messages">[ read messages ]</a>
+          </nav>
+          <div class="badge blink">UNDER<br>CONSTRUCTION</div>
+          <div class="notice">best viewed at 800x600<br>with javascript enabled</div>
+          <p style="text-align:center">* * *<br><span style="color:#ffea6b">web 1.0 forever</span><br>* * *</p>
+        </aside>
+        <main class="main">
+          <h2 id="sign">sign my guestbook!</h2>
+          <p>Thanks for stopping by! Leave a little note below so I know you were here.</p>
+          <form id="gb-form" autocomplete="off">
+            <label for="gb-name">your name <small>(optional)</small></label>
+            <input type="text" id="gb-name" maxlength="40" placeholder="anonymous">
+            <label for="gb-email">email <small>(optional / shown publicly)</small></label>
+            <input type="email" id="gb-email" maxlength="60" placeholder="you@example.com">
+            <label for="gb-message">message <small>(required)</small></label>
+            <textarea id="gb-message" maxlength="500" required placeholder="hello from the old web..."></textarea>
+            <div class="hp" aria-hidden="true"><input type="text" id="gb-trap" tabindex="-1" autocomplete="off"></div>
+            <button type="submit" id="gb-send">☆ SIGN GUESTBOOK ☆</button>
+            <p id="status" role="status"></p>
+          </form>
+          <hr>
+          <h2 id="messages">recent visitors</h2>
+          <div class="counter">visitor count: <span class="digits" id="odo">000000</span></div>
+          <ol id="entries"><li class="empty">loading messages...</li></ol>
+        </main>
       </div>
-
-      <div class="field-group">
-        <label for="gb-email">your email <span class="tag">(optional / private)</span></label>
-        <input type="email" id="gb-email" maxlength="60" placeholder="yourname@site.com">
-      </div>
-
-      <div class="field-group">
-        <label for="gb-message">your message <span class="tag">(required)</span></label>
-        <textarea id="gb-message" maxlength="500" required placeholder="say hello..."></textarea>
-      </div>
-
-      <div class="hp" aria-hidden="true">
-        <input type="text" id="gb-trap" name="zq_note_x" tabindex="-1" autocomplete="off">
-      </div>
-
-      <button type="submit" class="send-btn" id="gb-send">sign in →</button>
-      <p id="status" role="status"></p>
-    </form>
-
-    <div class="divider"></div>
-
-    <div class="counter">
-      visitor count:
-      <span class="odometer" id="odo"></span>
+      <footer>
+        <div class="buttons-row">HTML</div><div class="buttons-row">CSS</div><div class="buttons-row">MADE WITH LOVE</div>
+        <br>© 2026 salmontic · no cookies, no tracking, just vibes<br><a href="mailto:salmontic7@gmail.com">email the webmaster</a>
+      </footer>
     </div>
-
-    <ol id="entries"><li class="empty">loading entries...</li></ol>
   </div>
 </div>
-
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-  import {
-    initializeFirestore, collection, addDoc, getDocs,
-    query, orderBy, limit, serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+  import { initializeFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
   const app = initializeApp({
     apiKey: "AIzaSyDcdDWePMokczrl7uccMp9mhc9ERDB-6oA",
@@ -423,113 +125,50 @@
   });
   const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
   const col = collection(db, "guestbook");
-
   const $ = (id) => document.getElementById(id);
-
-  function setStatus(msg, err = false) {
-    $("status").textContent = msg;
-    $("status").className = err ? "err" : "";
-  }
-
-  function withTimeout(p, ms) {
-    return Promise.race([
-      p,
-      new Promise((_, rej) => setTimeout(() => rej({ code: "timeout" }), ms))
-    ]);
-  }
-
-  function renderOdometer(n) {
-    const odo = $("odo");
-    odo.replaceChildren();
-    const digits = String(n).padStart(6, "0").split("");
-    for (const d of digits) {
-      const span = document.createElement("span");
-      span.textContent = d;
-      odo.append(span);
-    }
-  }
+  const withTimeout = (p, ms) => Promise.race([p, new Promise((_, reject) => setTimeout(() => reject({ code: "timeout" }), ms))]);
+  function setStatus(message, error = false) { $("status").textContent = message; $("status").className = error ? "err" : ""; }
+  function renderCounter(n) { $("odo").textContent = String(n).padStart(6, "0"); }
 
   async function load() {
     try {
-      const snap = await withTimeout(
-        getDocs(query(col, orderBy("createdAt", "desc"), limit(50))), 10000
-      );
+      const snap = await withTimeout(getDocs(query(col, orderBy("createdAt", "desc"), limit(50))), 10000);
       const list = $("entries");
       list.replaceChildren();
-      renderOdometer(1337 + snap.size);
+      renderCounter(1337 + snap.size);
       if (snap.empty) {
-        const li = document.createElement("li");
-        li.className = "empty";
-        li.textContent = "no messages yet~ be the first!";
-        list.append(li);
-        return;
+        const li = document.createElement("li"); li.className = "empty"; li.textContent = "no messages yet... be the first!"; list.append(li); return;
       }
       snap.forEach((doc) => {
-        const d = doc.data();
+        const data = doc.data();
         const li = document.createElement("li");
-        const header = document.createElement("div");
-        header.className = "entry-header";
-        const nameSpan = document.createElement("span");
-        nameSpan.className = "entry-name";
-        nameSpan.textContent = d.name || "anonymous";
-        header.append(nameSpan);
-        if (d.email) {
-          const emailAnchor = document.createElement("a");
-          emailAnchor.className = "entry-email";
-          emailAnchor.href = "mailto:" + d.email;
-          emailAnchor.textContent = "✉ " + d.email;
-          header.append(emailAnchor);
-        }
-        const p = document.createElement("p");
-        p.textContent = d.message || "";
-        li.append(header, p);
-        list.append(li);
+        const head = document.createElement("div"); head.className = "entry-head";
+        const name = document.createElement("strong"); name.textContent = "» " + (data.name || "anonymous"); head.append(name);
+        if (data.email) { const email = document.createElement("a"); email.className = "entry-email"; email.href = "mailto:" + data.email; email.textContent = "✉ email"; head.append(email); }
+        const message = document.createElement("p"); message.textContent = data.message || "";
+        li.append(head, message); list.append(li);
       });
-    } catch (e) {
-      console.error(e);
-      renderOdometer(1337);
-      $("entries").replaceChildren();
-      const li = document.createElement("li");
-      li.className = "empty";
-      li.textContent = e.code === "timeout"
-        ? "can't reach the database right now."
-        : "couldn't load: " + (e.code || e.message);
-      $("entries").append(li);
+    } catch (error) {
+      console.error(error); renderCounter(1337); $("entries").replaceChildren();
+      const li = document.createElement("li"); li.className = "empty"; li.textContent = error.code === "timeout" ? "database connection timed out..." : "could not load: " + (error.code || error.message); $("entries").append(li);
     }
   }
 
-  $("gb-form").addEventListener("submit", async (ev) => {
-    ev.preventDefault();
+  $("gb-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
     if ($("gb-trap").value) return;
-
     const name = $("gb-name").value.trim() || "anonymous";
     const email = $("gb-email").value.trim();
     const message = $("gb-message").value.trim();
-    if (!message) { setStatus("write something first!", true); return; }
-
-    $("gb-send").disabled = true;
-    setStatus("sending...");
+    if (!message) { setStatus("please write a message first!", true); return; }
+    $("gb-send").disabled = true; setStatus("signing guestbook...");
     try {
-      await withTimeout(addDoc(col, {
-        name,
-        email: email || null,
-        message,
-        createdAt: serverTimestamp()
-      }), 10000);
-
-      $("gb-form").reset();
-      setStatus("sent! thanks for stopping by ♡");
-      load();
-    } catch (e) {
-      console.error(e);
-      setStatus(e.code === "timeout" ? "can't reach the database." : "Error: " + (e.code || e.message), true);
-    } finally {
-      $("gb-send").disabled = false;
-    }
+      await withTimeout(addDoc(col, { name, email: email || null, message, createdAt: serverTimestamp() }), 10000);
+      $("gb-form").reset(); setStatus("message posted! thanks for signing ♡"); load();
+    } catch (error) { console.error(error); setStatus(error.code === "timeout" ? "database connection timed out." : "error: " + (error.code || error.message), true); }
+    finally { $("gb-send").disabled = false; }
   });
-
   load();
 </script>
-
 </body>
 </html>

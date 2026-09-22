@@ -2,118 +2,199 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>~*~ salmontic's guestbook ~*~</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>guestbook // @salmontic</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
 <style>
-  html { background: #111; }
-  body {
+  * { box-sizing: border-box; }
+  
+  html, body {
+    width: 100%;
+    min-height: 100%;
     margin: 0;
-    color: #d7e9ff;
-    background: #17264a;
-    font-family: "Courier New", monospace;
-    font-size: 14px;
-    line-height: 1.4;
+    padding: 0;
   }
-  a { color: #63d8ff; }
-  a:visited { color: #d69cff; }
-  a:hover { color: #fff; background: #174a80; }
-  .page { width: min(760px, calc(100% - 24px)); margin: 18px auto; }
-  .topline { color: #ffea6b; text-align: center; font-size: 12px; margin-bottom: 8px; }
-  .window { border: 3px ridge #b7c7e6; background: #273866; box-shadow: 6px 6px #080d1b; }
-  .titlebar { padding: 4px 8px; color: #fff; background: linear-gradient(#3d78b8, #14325f); border-bottom: 2px solid #a8d8ff; font-weight: bold; }
-  .titlebar .buttons { float: right; color: #111; letter-spacing: 3px; background: #b7c7e6; padding: 0 3px; }
-  .content { padding: 14px; }
-  header { text-align: center; padding: 12px 6px; background: #101a38; border: 2px inset #8197c0; }
-  h1 { margin: 0; color: #7ee8ff; font-family: Impact, "Arial Black", sans-serif; font-size: clamp(26px, 7vw, 45px); letter-spacing: 4px; text-shadow: 3px 3px #561b8f; }
-  .subtitle { color: #ffeb70; font-size: 13px; }
-  marquee { color: #ff8fe3; margin: 10px 0; border-top: 1px dashed #6b9ac7; border-bottom: 1px dashed #6b9ac7; padding: 3px; }
-  .columns { display: grid; grid-template-columns: 155px 1fr; gap: 14px; margin-top: 14px; }
-  .sidebar, .main { border: 2px outset #8298c2; background: #1b2b54; padding: 10px; }
-  .sidebar h2, .main h2 { color: #ffea6b; font-size: 16px; margin: 0 0 8px; border-bottom: 1px dotted #83b8e6; padding-bottom: 4px; }
-  .nav a { display: block; margin: 6px 0; padding: 4px; border: 1px solid #52729e; background: #111d3b; text-decoration: none; }
-  .badge { display: block; margin: 12px auto; padding: 5px 2px; text-align: center; color: #111; background: #ffea6b; border: 2px outset #fff3a1; font-size: 11px; font-weight: bold; }
-  .blink { animation: blink 1s steps(2, start) infinite; }
-  @keyframes blink { 50% { visibility: hidden; } }
-  .notice { color: #ffc4f2; border: 1px dashed #e082ce; background: #321d50; padding: 7px; font-size: 12px; }
-  hr { border: 0; border-top: 1px dotted #8db7e4; margin: 16px 0; }
-  label { display: block; color: #9fe8ff; margin-top: 10px; font-weight: bold; }
-  label small { color: #b4bfd8; font-weight: normal; }
-  input, textarea { width: 100%; box-sizing: border-box; margin-top: 3px; padding: 7px; color: #111; background: #edf5ff; border: 2px inset #a8c6e8; font: 13px "Courier New", monospace; }
-  textarea { min-height: 100px; resize: vertical; }
-  input:focus, textarea:focus { outline: 2px solid #ffea6b; }
+
+  body {
+    font-family: 'Space Mono', monospace;
+    color: #382c20;
+    background-color: #f2e9d8;
+    background-image:
+        radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.6), transparent 40%),
+        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.015) 0px, rgba(0, 0, 0, 0.015) 1px, transparent 1px, transparent 2px);
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 12px 8px;
+  }
+
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 20;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+    opacity: .3;
+    mix-blend-mode: multiply;
+  }
+
+  .mini-wrap {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 380px;
+  }
+
+  .pocket-card {
+    background: #fffcf5;
+    border: 2px dashed #a38c70;
+    padding: 18px 16px 14px;
+    position: relative;
+    box-shadow: 4px 5px 12px rgba(56, 44, 32, 0.12);
+    border-radius: 2px;
+  }
+
+  .tape {
+    position: absolute;
+    height: 18px;
+    background: rgba(225, 190, 160, 0.65);
+    border-left: 2px dashed rgba(160, 120, 90, 0.4);
+    border-right: 2px dashed rgba(160, 120, 90, 0.4);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    z-index: 5;
+  }
+  .tape-top-left { top: -9px; left: 12px; width: 65px; transform: rotate(-4deg); }
+  .tape-top-right { top: -9px; right: 12px; width: 65px; transform: rotate(3deg); }
+
+  .header-gif {
+    width: 100%;
+    height: auto;
+    max-height: 140px;
+    object-fit: cover;
+    display: block;
+    border: 1px solid #382c20;
+    margin-bottom: 8px;
+  }
+
+  .quote {
+    font-family: 'Courier Prime', monospace;
+    font-style: italic;
+    font-size: 11px;
+    color: #5a4836;
+    margin: 0 0 12px 0;
+    text-align: center;
+    line-height: 1.35;
+  }
+
+  .form-grid { display: flex; flex-direction: column; gap: 8px; }
+  .field-row { display: flex; gap: 6px; }
+  .field-row input { flex: 1; width: 50%; }
+
+  input[type="text"], input[type="email"], textarea {
+    width: 100%;
+    padding: 6px 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #382c20;
+    background: #fbf8f0;
+    border: 1.5px solid #a38c70;
+    border-radius: 3px;
+    outline: none;
+    transition: all 0.15s ease;
+  }
+
+  input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+    background: #ffffff;
+    border-color: #382c20;
+    box-shadow: 2px 2px 0px #d05a50;
+  }
+
+  textarea { min-height: 60px; resize: vertical; }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
-  button { margin-top: 12px; padding: 7px 14px; color: #111; background: #ffea6b; border: 3px outset #fff3a1; font: bold 14px "Courier New", monospace; cursor: pointer; }
-  button:active { border-style: inset; }
-  button:disabled { opacity: .6; cursor: wait; }
-  #status { min-height: 1.4em; color: #8dffb0; font-weight: bold; }
-  #status.err { color: #ff8a9c; }
-  .counter { margin: 12px 0; color: #cbd6f1; text-align: center; }
-  .digits { display: inline-flex; padding: 2px 5px; background: #050505; border: 2px inset #777; color: #54ff54; letter-spacing: 2px; }
-  #entries { list-style: none; padding: 0; margin: 12px 0 0; }
-  #entries li { margin: 10px 0; padding: 9px; background: #101b38; border: 2px ridge #6986b5; }
-  #entries li.empty { color: #aab9d7; text-align: center; border-style: dashed; }
-  .entry-head { color: #ffea6b; border-bottom: 1px dotted #607eaa; padding-bottom: 4px; margin-bottom: 6px; }
-  .entry-email { float: right; color: #ff9cdd; font-size: 12px; }
-  #entries p { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0; color: #e0edff; }
-  footer { text-align: center; color: #9fb2d4; font-size: 11px; margin-top: 16px; }
-  .buttons-row { color: #111; background: #d2e4ff; display: inline-block; padding: 3px 8px; border: 2px outset #fff; margin: 5px 2px; font-size: 11px; }
-  @media (max-width: 560px) { .columns { grid-template-columns: 1fr; } .sidebar { order: 2; } }
-  @media (prefers-reduced-motion: reduce) { .blink { animation: none; } }
+
+  .love-btn {
+    width: 100%;
+    margin-top: 4px;
+    padding: 7px;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: #fffcf5;
+    background: #d05a50;
+    border: 1.5px solid #a83c33;
+    border-radius: 3px;
+    cursor: pointer;
+    box-shadow: 2px 2px 0px #382c20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.1s ease;
+  }
+
+  .love-btn:hover { background: #e0685e; transform: translate(-1px, -1px); box-shadow: 3px 3px 0px #382c20; }
+  .love-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0px #382c20; }
+  .love-btn:disabled { opacity: 0.6; cursor: wait; }
+
+  #status { margin: 6px 0 2px; font-family: 'VT323', monospace; font-size: 14px; text-align: center; min-height: 1.2em; color: #7a6348; }
+  #status.err { color: #d05a50; }
+  .mini-divider { border-bottom: 1px dashed #d2c4b0; margin: 12px 0; }
+
+  #entries { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  #entries li { background: #fbf8f0; border: 1px solid #d2c4b0; padding: 10px; border-radius: 3px; position: relative; }
+  #entries li.empty { text-align: center; color: #8c765c; font-family: 'VT323', monospace; font-size: 15px; border: 1px dashed #d2c4b0; background: transparent; }
+  .entry-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .entry-author { font-family: 'VT323', monospace; font-size: 16px; color: #d05a50; }
+  .entry-mail { font-family: 'VT323', monospace; font-size: 12px; color: #8c765c; text-decoration: none; }
+  .entry-mail:hover { text-decoration: underline; }
+  #entries p { margin: 0; font-family: 'Space Mono', monospace; font-size: 11px; line-height: 1.4; color: #382c20; white-space: pre-wrap; word-break: break-word; }
 </style>
 </head>
 <body>
-<div class="page">
-  <div class="topline">*** YOU ARE VISITOR #000001 ***</div>
-  <div class="window">
-    <div class="titlebar">guestbook.exe <span class="buttons">_ □ X</span></div>
-    <div class="content">
-      <header>
-        <h1>♡ SALMONTIC'S GUESTBOOK ♡</h1>
-        <div class="subtitle">welcome to my little corner of the internet!</div>
-      </header>
-      <marquee scrollamount="4">☆ leave a message ☆ say hello ☆ sign the guestbook ☆ thanks for visiting ☆</marquee>
-      <div class="columns">
-        <aside class="sidebar">
-          <h2>navigation</h2>
-          <nav class="nav">
-            <a href="index.html">[ home ]</a>
-            <a href="#sign">[ sign guestbook ]</a>
-            <a href="#messages">[ read messages ]</a>
-          </nav>
-          <div class="badge blink">UNDER<br>CONSTRUCTION</div>
-          <div class="notice">best viewed at 800x600<br>with javascript enabled</div>
-          <p style="text-align:center">* * *<br><span style="color:#ffea6b">web 1.0 forever</span><br>* * *</p>
-        </aside>
-        <main class="main">
-          <h2 id="sign">sign my guestbook!</h2>
-          <p>Thanks for stopping by! Leave a little note below so I know you were here.</p>
-          <form id="gb-form" autocomplete="off">
-            <label for="gb-name">your name <small>(optional)</small></label>
-            <input type="text" id="gb-name" maxlength="40" placeholder="anonymous">
-            <label for="gb-email">email <small>(optional / shown publicly)</small></label>
-            <input type="email" id="gb-email" maxlength="60" placeholder="you@example.com">
-            <label for="gb-message">message <small>(required)</small></label>
-            <textarea id="gb-message" maxlength="500" required placeholder="hello from the old web..."></textarea>
-            <div class="hp" aria-hidden="true"><input type="text" id="gb-trap" tabindex="-1" autocomplete="off"></div>
-            <button type="submit" id="gb-send">☆ SIGN GUESTBOOK ☆</button>
-            <p id="status" role="status"></p>
-          </form>
-          <hr>
-          <h2 id="messages">recent visitors</h2>
-          <div class="counter">visitor count: <span class="digits" id="odo">000000</span></div>
-          <ol id="entries"><li class="empty">loading messages...</li></ol>
-        </main>
+
+<div class="grain"></div>
+
+<div class="mini-wrap">
+  <div class="pocket-card">
+    <div class="tape tape-top-left"></div>
+    <div class="tape tape-top-right"></div>
+    
+    <img src="https://i.postimg.cc/6pnPfKmF/8426f90f-04db-4582-9540-2d8735b134b1.gif" alt="Header GIF" class="header-gif">
+    <p class="quote">"Life is a pond of suffering... therefore sit here, puff your cigarette, and leave your notes."</p>
+
+    <form id="gb-form" class="form-grid" autocomplete="off">
+      <div class="field-row">
+        <input type="text" id="gb-name" maxlength="30" placeholder="name *">
+        <input type="email" id="gb-email" maxlength="50" placeholder="email (optional)">
       </div>
-      <footer>
-        <div class="buttons-row">HTML</div><div class="buttons-row">CSS</div><div class="buttons-row">MADE WITH LOVE</div>
-        <br>© 2026 salmontic · no cookies, no tracking, just vibes<br><a href="mailto:salmontic7@gmail.com">email the webmaster</a>
-      </footer>
-    </div>
+
+      <textarea id="gb-message" maxlength="300" required placeholder="write something sweet... *"></textarea>
+
+      <div class="hp" aria-hidden="true">
+        <input type="text" id="gb-trap" name="zq_note_x" tabindex="-1" autocomplete="off">
+      </div>
+
+      <button type="submit" class="love-btn" id="gb-send">
+        <span>leave note</span> ♡
+      </button>
+      <p id="status" role="status"></p>
+    </form>
+
+    <div class="mini-divider"></div>
+
+    <ol id="entries"><li class="empty">loading notes...</li></ol>
   </div>
 </div>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-  import { initializeFirestore, collection, addDoc, getDocs, query, orderBy, limit, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+  import {
+    initializeFirestore, collection, addDoc, getDocs,
+    query, orderBy, limit, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
   const app = initializeApp({
     apiKey: "AIzaSyDcdDWePMokczrl7uccMp9mhc9ERDB-6oA",
@@ -123,52 +204,80 @@
     messagingSenderId: "617905820259",
     appId: "1:617905820259:web:1d16cb3796961bf03f5e56"
   });
+  
   const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
   const col = collection(db, "guestbook");
   const $ = (id) => document.getElementById(id);
-  const withTimeout = (p, ms) => Promise.race([p, new Promise((_, reject) => setTimeout(() => reject({ code: "timeout" }), ms))]);
-  function setStatus(message, error = false) { $("status").textContent = message; $("status").className = error ? "err" : ""; }
-  function renderCounter(n) { $("odo").textContent = String(n).padStart(6, "0"); }
+
+  function setStatus(msg, err = false) { $("status").textContent = msg; $("status").className = err ? "err" : ""; }
+  function withTimeout(p, ms) { return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej({ code: "timeout" }), ms))]); }
 
   async function load() {
     try {
-      const snap = await withTimeout(getDocs(query(col, orderBy("createdAt", "desc"), limit(50))), 10000);
+      const snap = await withTimeout(getDocs(query(col, orderBy("createdAt", "desc"), limit(30))), 10000);
       const list = $("entries");
       list.replaceChildren();
-      renderCounter(1337 + snap.size);
       if (snap.empty) {
-        const li = document.createElement("li"); li.className = "empty"; li.textContent = "no messages yet... be the first!"; list.append(li); return;
+        const li = document.createElement("li");
+        li.className = "empty";
+        li.textContent = "no notes yet... be the first! ♡";
+        list.append(li);
+        return;
       }
       snap.forEach((doc) => {
-        const data = doc.data();
+        const d = doc.data();
         const li = document.createElement("li");
-        const head = document.createElement("div"); head.className = "entry-head";
-        const name = document.createElement("strong"); name.textContent = "» " + (data.name || "anonymous"); head.append(name);
-        if (data.email) { const email = document.createElement("a"); email.className = "entry-email"; email.href = "mailto:" + data.email; email.textContent = "✉ email"; head.append(email); }
-        const message = document.createElement("p"); message.textContent = data.message || "";
-        li.append(head, message); list.append(li);
+        const head = document.createElement("div");
+        head.className = "entry-head";
+        const author = document.createElement("span");
+        author.className = "entry-author";
+        author.textContent = "✦ " + (d.name || "anonymous");
+        head.append(author);
+        if (d.email) {
+          const mail = document.createElement("a");
+          mail.className = "entry-mail";
+          mail.href = "mailto:" + d.email;
+          mail.textContent = "✉ mail";
+          head.append(mail);
+        }
+        const p = document.createElement("p");
+        p.textContent = d.message || "";
+        li.append(head, p);
+        list.append(li);
       });
-    } catch (error) {
-      console.error(error); renderCounter(1337); $("entries").replaceChildren();
-      const li = document.createElement("li"); li.className = "empty"; li.textContent = error.code === "timeout" ? "database connection timed out..." : "could not load: " + (error.code || error.message); $("entries").append(li);
+    } catch (e) {
+      console.error(e);
+      const li = document.createElement("li");
+      li.className = "empty";
+      li.textContent = "couldn't load notes right now.";
+      $("entries").replaceChildren(li);
     }
   }
 
-  $("gb-form").addEventListener("submit", async (event) => {
-    event.preventDefault();
+  $("gb-form").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
     if ($("gb-trap").value) return;
     const name = $("gb-name").value.trim() || "anonymous";
     const email = $("gb-email").value.trim();
     const message = $("gb-message").value.trim();
-    if (!message) { setStatus("please write a message first!", true); return; }
-    $("gb-send").disabled = true; setStatus("signing guestbook...");
+    if (!message) { setStatus("write a note first!", true); return; }
+    $("gb-send").disabled = true;
+    setStatus("posting note...");
     try {
       await withTimeout(addDoc(col, { name, email: email || null, message, createdAt: serverTimestamp() }), 10000);
-      $("gb-form").reset(); setStatus("message posted! thanks for signing ♡"); load();
-    } catch (error) { console.error(error); setStatus(error.code === "timeout" ? "database connection timed out." : "error: " + (error.code || error.message), true); }
-    finally { $("gb-send").disabled = false; }
+      $("gb-form").reset();
+      setStatus("note added! thank you ♡");
+      load();
+    } catch (e) {
+      console.error(e);
+      setStatus("Error: " + (e.code || "failed"), true);
+    } finally {
+      $("gb-send").disabled = false;
+    }
   });
+
   load();
 </script>
+
 </body>
 </html>

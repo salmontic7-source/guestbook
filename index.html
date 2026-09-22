@@ -2,190 +2,371 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>guestbook // @salmontic</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@salmontic // archive.sys</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=VT323&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
   
-  html, body {
-    width: 100%;
-    min-height: 100%;
-    margin: 0;
-    padding: 0;
-  }
-
   body {
-    font-family: 'Space Mono', monospace;
-    color: #382c20;
-    background-color: #f2e9d8;
-    background-image:
-        radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.6), transparent 40%),
-        repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.015) 0px, rgba(0, 0, 0, 0.015) 1px, transparent 1px, transparent 2px);
-    background-attachment: fixed;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    color: #2b2219;
+    background-color: #d8cbb5;
+    background-image: 
+      radial-gradient(circle at 50% 50%, rgba(244, 235, 218, 0.65), rgba(184, 163, 137, 0.85)),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 3px),
+      radial-gradient(rgba(100, 70, 40, 0.15) 1px, transparent 0);
+    background-size: 100% 100%, 100% 100%, 12px 12px;
+    margin: 0;
+    padding: 20px 10px;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    padding: 12px 8px;
   }
 
-  .grain {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 20;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
-    opacity: .3;
-    mix-blend-mode: multiply;
-  }
-
-  .mini-wrap {
-    position: relative;
-    z-index: 2;
+  .archive-wrapper {
     width: 100%;
-    max-width: 380px;
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
   }
 
-  .pocket-card {
-    background: #fffcf5;
-    border: 2px dashed #a38c70;
-    padding: 18px 16px 14px;
-    position: relative;
-    box-shadow: 4px 5px 12px rgba(56, 44, 32, 0.12);
-    border-radius: 2px;
+  .sys-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #2b2219;
+    padding-bottom: 6px;
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.5px;
   }
 
-  .tape {
-    position: absolute;
-    height: 18px;
-    background: rgba(225, 190, 160, 0.65);
-    border-left: 2px dashed rgba(160, 120, 90, 0.4);
-    border-right: 2px dashed rgba(160, 120, 90, 0.4);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
-    z-index: 5;
+  .sys-title {
+    background: #2b2219;
+    color: #f4ebd9;
+    padding: 2px 6px;
   }
-  .tape-top-left { top: -9px; left: 12px; width: 65px; transform: rotate(-4deg); }
-  .tape-top-right { top: -9px; right: 12px; width: 65px; transform: rotate(3deg); }
 
   .header-gif {
     width: 100%;
     height: auto;
-    max-height: 140px;
+    max-height: 160px;
     object-fit: cover;
     display: block;
-    border: 1px solid #382c20;
-    margin-bottom: 8px;
+    border: 1px solid #2b2219;
+    box-shadow: 3px 3px 0px #2b2219;
   }
 
   .quote {
-    font-family: 'Courier Prime', monospace;
     font-style: italic;
     font-size: 11px;
     color: #5a4836;
-    margin: 0 0 12px 0;
+    margin: 0;
     text-align: center;
-    line-height: 1.35;
+    line-height: 1.4;
+    padding: 0 8px;
   }
 
-  .form-grid { display: flex; flex-direction: column; gap: 8px; }
-  .field-row { display: flex; gap: 6px; }
-  .field-row input { flex: 1; width: 50%; }
+  .panel-box {
+    background: #ede3d1;
+    border: 1px solid #2b2219;
+    box-shadow: 4px 4px 0px #2b2219;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+  }
+
+  .panel-tag {
+    position: absolute;
+    top: -10px;
+    right: 12px;
+    background: #d8cbb5;
+    border: 1px solid #2b2219;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 6px;
+    text-transform: uppercase;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .field-group label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #2b2219;
+  }
 
   input[type="text"], input[type="email"], textarea {
     width: 100%;
-    padding: 6px 8px;
-    font-family: 'Space Mono', monospace;
-    font-size: 11px;
-    color: #382c20;
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px;
+    padding: 7px;
+    border: 1px solid #2b2219;
     background: #fbf8f0;
-    border: 1.5px solid #a38c70;
-    border-radius: 3px;
+    color: #2b2219;
     outline: none;
-    transition: all 0.15s ease;
+    border-radius: 0;
   }
 
   input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
     background: #ffffff;
-    border-color: #382c20;
-    box-shadow: 2px 2px 0px #d05a50;
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.1);
   }
 
-  textarea { min-height: 60px; resize: vertical; }
+  textarea {
+    resize: vertical;
+    min-height: 75px;
+  }
+
+  .trans-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    background: #2b2219;
+    color: #f4ebd9;
+    border: 1px solid #2b2219;
+    padding: 8px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-align: center;
+    transition: all 0.1s ease;
+    margin-top: 2px;
+  }
+
+  .trans-btn:hover {
+    background: #f4ebd9;
+    color: #2b2219;
+  }
+
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
-  .love-btn {
-    width: 100%;
-    margin-top: 4px;
-    padding: 7px;
-    font-family: 'VT323', monospace;
-    font-size: 18px;
-    letter-spacing: 1px;
-    color: #fffcf5;
-    background: #d05a50;
-    border: 1.5px solid #a83c33;
-    border-radius: 3px;
-    cursor: pointer;
-    box-shadow: 2px 2px 0px #382c20;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.1s ease;
+  #status {
+    margin: 2px 0 0;
+    font-size: 10px;
+    font-weight: 700;
+    text-align: center;
+    color: #8c3b2b;
+    min-height: 12px;
   }
 
-  .love-btn:hover { background: #e0685e; transform: translate(-1px, -1px); box-shadow: 3px 3px 0px #382c20; }
-  .love-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0px #382c20; }
-  .love-btn:disabled { opacity: 0.6; cursor: wait; }
+  .logs-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    border-bottom: 1px solid #2b2219;
+    padding-bottom: 4px;
+    margin-top: 6px;
+  }
 
-  #status { margin: 6px 0 2px; font-family: 'VT323', monospace; font-size: 14px; text-align: center; min-height: 1.2em; color: #7a6348; }
-  #status.err { color: #d05a50; }
-  .mini-divider { border-bottom: 1px dashed #d2c4b0; margin: 12px 0; }
+  #entries {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-  #entries { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-  #entries li { background: #fbf8f0; border: 1px solid #d2c4b0; padding: 10px; border-radius: 3px; position: relative; }
-  #entries li.empty { text-align: center; color: #8c765c; font-family: 'VT323', monospace; font-size: 15px; border: 1px dashed #d2c4b0; background: transparent; }
-  .entry-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-  .entry-author { font-family: 'VT323', monospace; font-size: 16px; color: #d05a50; }
-  .entry-mail { font-family: 'VT323', monospace; font-size: 12px; color: #8c765c; text-decoration: none; }
-  .entry-mail:hover { text-decoration: underline; }
-  #entries p { margin: 0; font-family: 'Space Mono', monospace; font-size: 11px; line-height: 1.4; color: #382c20; white-space: pre-wrap; word-break: break-word; }
+  #entries li {
+    background: #f4ebd9;
+    border: 1px solid #2b2219;
+    padding: 10px;
+    position: relative;
+  }
+
+  #entries li::before {
+    content: "LOG_ENTRY //";
+    display: block;
+    font-size: 9px;
+    font-weight: 700;
+    color: #8c3b2b;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+
+  #entries li.empty {
+    text-align: center;
+    color: #5a4836;
+    font-style: italic;
+    background: transparent;
+    border: 1px dashed #2b2219;
+  }
+
+  #entries li.empty::before { display: none; }
+
+  .entry-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    border-bottom: 1px solid #d8cbb5;
+    padding-bottom: 4px;
+  }
+
+  .entry-author { color: #2b2219; }
+  .entry-date { color: #5a4836; font-weight: normal; font-size: 10px; }
+
+  .entry-body {
+    font-size: 11px;
+    line-height: 1.4;
+    color: #2b2219;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .piano-box {
+    background: #ede3d1;
+    border: 1px solid #2b2219;
+    box-shadow: 4px 4px 0px #2b2219;
+    padding: 12px;
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .piano-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .piano-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    background: #2b2219;
+    color: #f4ebd9;
+    border: 1px solid #2b2219;
+    padding: 4px 8px;
+    cursor: pointer;
+  }
+
+  .piano-btn:hover {
+    background: #f4ebd9;
+    color: #2b2219;
+  }
+
+  .piano-keys {
+    display: flex;
+    position: relative;
+    height: 70px;
+    border: 1px solid #2b2219;
+    background: #2b2219;
+    justify-content: center;
+    user-select: none;
+  }
+
+  .key-white {
+    flex: 1;
+    background: #fbf8f0;
+    border: 1px solid #2b2219;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .key-white.active, .key-white:active {
+    background: #d8cbb5;
+  }
+
+  .key-black {
+    width: 7%;
+    height: 60%;
+    background: #2b2219;
+    position: absolute;
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  .key-black.active, .key-black:active {
+    background: #8c3b2b;
+  }
+
+  .kb-1 { left: 10%; }
+  .kb-2 { left: 24%; }
+  .kb-3 { left: 53%; }
+  .kb-4 { left: 67%; }
+  .kb-5 { left: 81%; }
 </style>
 </head>
 <body>
 
-<div class="grain"></div>
+<div class="archive-wrapper">
+  <div class="sys-bar">
+    <span class="sys-title">DIR://SALMONTIC/GUESTBOOK</span>
+    <span>SYS_VER 2.6</span>
+  </div>
 
-<div class="mini-wrap">
-  <div class="pocket-card">
-    <div class="tape tape-top-left"></div>
-    <div class="tape tape-top-right"></div>
-    
-    <img src="https://i.postimg.cc/6pnPfKmF/8426f90f-04db-4582-9540-2d8735b134b1.gif" alt="Header GIF" class="header-gif">
-    <p class="quote">"Life is a pond of suffering... therefore sit here, puff your cigarette, and leave your notes."</p>
+  <img src="https://i.postimg.cc/6pnPfKmF/8426f90f-04db-4582-9540-2d8735b134b1.gif" alt="Header GIF" class="header-gif">
+  <p class="quote">"Life is a pond of suffering... therefore sit here, puff your cigarette, and leave your notes."</p>
 
-    <form id="gb-form" class="form-grid" autocomplete="off">
-      <div class="field-row">
-        <input type="text" id="gb-name" maxlength="30" placeholder="name *">
-        <input type="email" id="gb-email" maxlength="50" placeholder="email (optional)">
-      </div>
+  <form id="gb-form" class="panel-box" autocomplete="off">
+    <span class="panel-tag">NEW TRANSMISSION</span>
 
-      <textarea id="gb-message" maxlength="300" required placeholder="write something sweet... *"></textarea>
+    <div class="field-group">
+      <label for="gb-name">[ SENDER ID ]</label>
+      <input type="text" id="gb-name" maxlength="40" placeholder="anonymous">
+    </div>
 
-      <div class="hp" aria-hidden="true">
-        <input type="text" id="gb-trap" name="zq_note_x" tabindex="-1" autocomplete="off">
-      </div>
+    <div class="field-group">
+      <label for="gb-email">[ CONTACT MAIL (OPTIONAL) ]</label>
+      <input type="email" id="gb-email" maxlength="60" placeholder="hidden_from_public@domain">
+    </div>
 
-      <button type="submit" class="love-btn" id="gb-send">
-        <span>leave note</span> ♡
-      </button>
-      <p id="status" role="status"></p>
-    </form>
+    <div class="field-group">
+      <label for="gb-message">[ PAYLOAD / MESSAGE ]</label>
+      <textarea id="gb-message" maxlength="400" required placeholder="Type log here..."></textarea>
+    </div>
 
-    <div class="mini-divider"></div>
+    <div class="hp" aria-hidden="true">
+      <input type="text" id="gb-trap" name="zq_note_x" tabindex="-1" autocomplete="off">
+    </div>
 
-    <ol id="entries"><li class="empty">loading notes...</li></ol>
+    <button type="submit" class="trans-btn" id="gb-send">> EXECUTE_TRANSMISSION</button>
+    <p id="status" role="status"></p>
+  </form>
+
+  <div class="logs-header">
+    <span>INDEXED_ENTRIES</span>
+    <span id="entry-count">0 RECORDS</span>
+  </div>
+
+  <ol id="entries"><li class="empty">Reading archive system...</li></ol>
+
+  <div class="piano-box">
+    <div class="piano-header">
+      <span>♪ AUDIO_PLAYER // FÜR ELISE</span>
+      <button class="piano-btn" id="piano-toggle">PLAY SONG</button>
+    </div>
+    <div class="piano-keys">
+      <div class="key-white" data-note="E4"></div>
+      <div class="key-black kb-1" data-note="DS4"></div>
+      <div class="key-white" data-note="D4"></div>
+      <div class="key-black kb-2" data-note="CS4"></div>
+      <div class="key-white" data-note="C4"></div>
+      <div class="key-white" data-note="B3"></div>
+      <div class="key-black kb-3" data-note="AS3"></div>
+      <div class="key-white" data-note="A3"></div>
+      <div class="key-black kb-4" data-note="GS3"></div>
+      <div class="key-white" data-note="G3"></div>
+      <div class="key-black kb-5" data-note="FS3"></div>
+      <div class="key-white" data-note="F3"></div>
+    </div>
   </div>
 </div>
 
@@ -209,21 +390,31 @@
   const col = collection(db, "guestbook");
   const $ = (id) => document.getElementById(id);
 
-  function setStatus(msg, err = false) { $("status").textContent = msg; $("status").className = err ? "err" : ""; }
-  function withTimeout(p, ms) { return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej({ code: "timeout" }), ms))]); }
+  function setStatus(msg) {
+    $("status").textContent = msg;
+  }
+
+  function formatDate(ts) {
+    if (!ts) return "RECENT";
+    const date = ts.toDate ? ts.toDate() : new Date(ts);
+    return date.toLocaleDateString('en-GB') + ' ' + date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  }
 
   async function load() {
     try {
-      const snap = await withTimeout(getDocs(query(col, orderBy("createdAt", "desc"), limit(30))), 10000);
+      const snap = await getDocs(query(col, orderBy("createdAt", "desc"), limit(30)));
       const list = $("entries");
       list.replaceChildren();
+      $("entry-count").textContent = `${snap.docs.length} RECORDS`;
+
       if (snap.empty) {
         const li = document.createElement("li");
         li.className = "empty";
-        li.textContent = "no notes yet... be the first! ♡";
+        li.textContent = "Archive directory is empty.";
         list.append(li);
         return;
       }
+
       snap.forEach((doc) => {
         const d = doc.data();
         const li = document.createElement("li");
@@ -231,25 +422,22 @@
         head.className = "entry-head";
         const author = document.createElement("span");
         author.className = "entry-author";
-        author.textContent = "✦ " + (d.name || "anonymous");
-        head.append(author);
-        if (d.email) {
-          const mail = document.createElement("a");
-          mail.className = "entry-mail";
-          mail.href = "mailto:" + d.email;
-          mail.textContent = "✉ mail";
-          head.append(mail);
-        }
-        const p = document.createElement("p");
-        p.textContent = d.message || "";
-        li.append(head, p);
+        author.textContent = "FROM: " + (d.name || "ANONYMOUS");
+        const date = document.createElement("span");
+        date.className = "entry-date";
+        date.textContent = formatDate(d.createdAt);
+        head.append(author, date);
+        const body = document.createElement("div");
+        body.className = "entry-body";
+        body.textContent = d.message || "";
+        li.append(head, body);
         list.append(li);
       });
     } catch (e) {
       console.error(e);
       const li = document.createElement("li");
       li.className = "empty";
-      li.textContent = "couldn't load notes right now.";
+      li.textContent = "Directory read error.";
       $("entries").replaceChildren(li);
     }
   }
@@ -257,26 +445,116 @@
   $("gb-form").addEventListener("submit", async (ev) => {
     ev.preventDefault();
     if ($("gb-trap").value) return;
-    const name = $("gb-name").value.trim() || "anonymous";
+
+    const name = $("gb-name").value.trim() || "ANONYMOUS";
     const email = $("gb-email").value.trim();
     const message = $("gb-message").value.trim();
-    if (!message) { setStatus("write a note first!", true); return; }
+    if (!message) return;
+
     $("gb-send").disabled = true;
-    setStatus("posting note...");
+    setStatus("TRANSMITTING_DATA...");
+
     try {
-      await withTimeout(addDoc(col, { name, email: email || null, message, createdAt: serverTimestamp() }), 10000);
+      await addDoc(col, { 
+        name, 
+        email: email || null, 
+        message, 
+        createdAt: serverTimestamp() 
+      });
       $("gb-form").reset();
-      setStatus("note added! thank you ♡");
+      setStatus("TRANSMISSION_SUCCESSFUL");
       load();
     } catch (e) {
       console.error(e);
-      setStatus("Error: " + (e.code || "failed"), true);
+      setStatus("TRANSMISSION_FAILED");
     } finally {
       $("gb-send").disabled = false;
     }
   });
 
   load();
+
+  let audioCtx = null;
+  const frequencies = {
+    'E4': 329.63, 'DS4': 311.13, 'D4': 293.66, 'CS4': 277.18,
+    'C4': 261.63, 'B3': 246.94, 'AS3': 233.08, 'A3': 220.00,
+    'GS3': 207.65, 'G3': 196.00, 'FS3': 185.00, 'F3': 174.61
+  };
+
+  function playTone(freq, duration = 0.3) {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  }
+
+  const furElise = [
+    { note: 'E4', duration: 220 }, { note: 'DS4', duration: 220 },
+    { note: 'E4', duration: 220 }, { note: 'DS4', duration: 220 },
+    { note: 'E4', duration: 220 }, { note: 'B3', duration: 220 },
+    { note: 'D4', duration: 220 }, { note: 'C4', duration: 220 },
+    { note: 'A3', duration: 440 }, { note: 'C4', duration: 220 },
+    { note: 'E4', duration: 220 }, { note: 'A3', duration: 220 },
+    { note: 'B3', duration: 440 }, { note: 'E4', duration: 220 },
+    { note: 'GS3', duration: 220 }, { note: 'B3', duration: 220 },
+    { note: 'C4', duration: 440 }
+  ];
+
+  let songIndex = 0;
+  let isPlaying = false;
+  let songTimer = null;
+
+  function playNextNote() {
+    if (!isPlaying) return;
+    const current = furElise[songIndex];
+    if (frequencies[current.note]) {
+      playTone(frequencies[current.note], current.duration / 1000);
+      const keyEl = document.querySelector(`[data-note="${current.note}"]`);
+      if (keyEl) {
+        keyEl.classList.add('active');
+        setTimeout(() => keyEl.classList.remove('active'), current.duration - 50);
+      }
+    }
+    songIndex = (songIndex + 1) % furElise.length;
+    songTimer = setTimeout(playNextNote, current.duration);
+  }
+
+  const toggleBtn = $("piano-toggle");
+  toggleBtn.addEventListener("click", () => {
+    if (isPlaying) {
+      isPlaying = false;
+      clearTimeout(songTimer);
+      toggleBtn.textContent = "PLAY SONG";
+    } else {
+      isPlaying = true;
+      toggleBtn.textContent = "STOP SONG";
+      playNextNote();
+    }
+  });
+
+  document.querySelectorAll('.piano-keys div').forEach(key => {
+    key.addEventListener('click', () => {
+      const note = key.getAttribute('data-note');
+      if (frequencies[note]) playTone(frequencies[note], 0.4);
+    });
+  });
+
+  window.addEventListener('click', () => {
+    if (!isPlaying && songIndex === 0) {
+      isPlaying = true;
+      toggleBtn.textContent = "STOP SONG";
+      playNextNote();
+    }
+  }, { once: true });
 </script>
 
 </body>

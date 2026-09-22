@@ -226,82 +226,6 @@
     white-space: pre-wrap;
     word-break: break-word;
   }
-
-  .piano-box {
-    background: #ede3d1;
-    border: 1px solid #2b2219;
-    box-shadow: 4px 4px 0px #2b2219;
-    padding: 12px;
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .piano-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 10px;
-    font-weight: 700;
-  }
-
-  .piano-btn {
-    font-family: 'Courier Prime', monospace;
-    font-size: 10px;
-    font-weight: 700;
-    background: #2b2219;
-    color: #f4ebd9;
-    border: 1px solid #2b2219;
-    padding: 4px 8px;
-    cursor: pointer;
-  }
-
-  .piano-btn:hover {
-    background: #f4ebd9;
-    color: #2b2219;
-  }
-
-  .piano-keys {
-    display: flex;
-    position: relative;
-    height: 70px;
-    border: 1px solid #2b2219;
-    background: #2b2219;
-    justify-content: center;
-    user-select: none;
-  }
-
-  .key-white {
-    flex: 1;
-    background: #fbf8f0;
-    border: 1px solid #2b2219;
-    cursor: pointer;
-    z-index: 1;
-  }
-
-  .key-white.active, .key-white:active {
-    background: #d8cbb5;
-  }
-
-  .key-black {
-    width: 7%;
-    height: 60%;
-    background: #2b2219;
-    position: absolute;
-    z-index: 2;
-    cursor: pointer;
-  }
-
-  .key-black.active, .key-black:active {
-    background: #8c3b2b;
-  }
-
-  .kb-1 { left: 10%; }
-  .kb-2 { left: 24%; }
-  .kb-3 { left: 53%; }
-  .kb-4 { left: 67%; }
-  .kb-5 { left: 81%; }
 </style>
 </head>
 <body>
@@ -347,27 +271,6 @@
   </div>
 
   <ol id="entries"><li class="empty">Reading archive system...</li></ol>
-
-  <div class="piano-box">
-    <div class="piano-header">
-      <span>♪ AUDIO_PLAYER // FÜR ELISE</span>
-      <button class="piano-btn" id="piano-toggle">PLAY SONG</button>
-    </div>
-    <div class="piano-keys">
-      <div class="key-white" data-note="E4"></div>
-      <div class="key-black kb-1" data-note="DS4"></div>
-      <div class="key-white" data-note="D4"></div>
-      <div class="key-black kb-2" data-note="CS4"></div>
-      <div class="key-white" data-note="C4"></div>
-      <div class="key-white" data-note="B3"></div>
-      <div class="key-black kb-3" data-note="AS3"></div>
-      <div class="key-white" data-note="A3"></div>
-      <div class="key-black kb-4" data-note="GS3"></div>
-      <div class="key-white" data-note="G3"></div>
-      <div class="key-black kb-5" data-note="FS3"></div>
-      <div class="key-white" data-note="F3"></div>
-    </div>
-  </div>
 </div>
 
 <script type="module">
@@ -388,6 +291,7 @@
   
   const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
   const col = collection(db, "guestbook");
+
   const $ = (id) => document.getElementById(id);
 
   function setStatus(msg) {
@@ -473,88 +377,6 @@
   });
 
   load();
-
-  let audioCtx = null;
-  const frequencies = {
-    'E4': 329.63, 'DS4': 311.13, 'D4': 293.66, 'CS4': 277.18,
-    'C4': 261.63, 'B3': 246.94, 'AS3': 233.08, 'A3': 220.00,
-    'GS3': 207.65, 'G3': 196.00, 'FS3': 185.00, 'F3': 174.61
-  };
-
-  function playTone(freq, duration = 0.3) {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if (audioCtx.state === 'suspended') audioCtx.resume();
-
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.type = 'triangle';
-    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + duration);
-  }
-
-  const furElise = [
-    { note: 'E4', duration: 220 }, { note: 'DS4', duration: 220 },
-    { note: 'E4', duration: 220 }, { note: 'DS4', duration: 220 },
-    { note: 'E4', duration: 220 }, { note: 'B3', duration: 220 },
-    { note: 'D4', duration: 220 }, { note: 'C4', duration: 220 },
-    { note: 'A3', duration: 440 }, { note: 'C4', duration: 220 },
-    { note: 'E4', duration: 220 }, { note: 'A3', duration: 220 },
-    { note: 'B3', duration: 440 }, { note: 'E4', duration: 220 },
-    { note: 'GS3', duration: 220 }, { note: 'B3', duration: 220 },
-    { note: 'C4', duration: 440 }
-  ];
-
-  let songIndex = 0;
-  let isPlaying = false;
-  let songTimer = null;
-
-  function playNextNote() {
-    if (!isPlaying) return;
-    const current = furElise[songIndex];
-    if (frequencies[current.note]) {
-      playTone(frequencies[current.note], current.duration / 1000);
-      const keyEl = document.querySelector(`[data-note="${current.note}"]`);
-      if (keyEl) {
-        keyEl.classList.add('active');
-        setTimeout(() => keyEl.classList.remove('active'), current.duration - 50);
-      }
-    }
-    songIndex = (songIndex + 1) % furElise.length;
-    songTimer = setTimeout(playNextNote, current.duration);
-  }
-
-  const toggleBtn = $("piano-toggle");
-  toggleBtn.addEventListener("click", () => {
-    if (isPlaying) {
-      isPlaying = false;
-      clearTimeout(songTimer);
-      toggleBtn.textContent = "PLAY SONG";
-    } else {
-      isPlaying = true;
-      toggleBtn.textContent = "STOP SONG";
-      playNextNote();
-    }
-  });
-
-  document.querySelectorAll('.piano-keys div').forEach(key => {
-    key.addEventListener('click', () => {
-      const note = key.getAttribute('data-note');
-      if (frequencies[note]) playTone(frequencies[note], 0.4);
-    });
-  });
-
-  window.addEventListener('click', () => {
-    if (!isPlaying && songIndex === 0) {
-      isPlaying = true;
-      toggleBtn.textContent = "STOP SONG";
-      playNextNote();
-    }
-  }, { once: true });
 </script>
 
 </body>

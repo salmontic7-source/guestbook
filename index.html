@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guestbook</title>
+<style>
+  body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 0 16px; }
+  h1 { font-size: 1.5rem; }
+  label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.9rem; }
+  input, textarea { width: 100%; padding: 8px; margin-top: 4px; font: inherit; box-sizing: border-box; }
+  textarea { min-height: 80px; }
+  button { margin-top: 12px; padding: 8px 16px; font: inherit; cursor: pointer; }
+  #status { margin-top: 10px; font-size: 0.9rem; }
+  #status.err { color: red; font-weight: bold; }
+  .hp { position: absolute; left: -9999px; }
+  #entries { margin-top: 30px; padding: 0; list-style: none; }
+  #entries li { border-bottom: 1px solid #ccc; padding: 10px 0; }
+  #entries b { display: block; }
+</style>
+</head>
+<body>
+
+<h1>Guestbook</h1>
+
+<form id="gb-form">
+  <label for="gb-name">Name</label>
+  <input type="text" id="gb-name" maxlength="40" placeholder="Anonymous">
+
+  <label for="gb-message">Message</label>
+  <textarea id="gb-message" maxlength="500" required></textarea>
+
+  <div class="hp" aria-hidden="true">
+    <input type="text" id="gb-trap" tabindex="-1" autocomplete="off">
+  </div>
+
+  <button type="submit" id="gb-send">Send</button>
+  <p id="status"></p>
+</form>
+
+<ul id="entries"><li>Loading...</li></ul>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import {
+    initializeFirestore, collection, addDoc, getDocs,
+    query, orderBy, limit, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+  const app = initializeApp({
+    apiKey: "AIzaSyDcdDWePMokczrl7uccMp9mhc9ERDB-6oA",
+    authDomain: "eo-cite.firebaseapp.com",
+    projectId: "eo-cite",
+    storageBucket: "eo-cite.firebasestorage.app",
+    messagingSenderId: "617905820259",
+    appId: "1:617905820259:web:1d16cb3796961bf03f5e56"
+  });
+  // falls back automatically if the normal connection is blocked
+  const db = initializeFirestore(app, { experimentalAutoDetectLongPolling: true });
+  const col = collection(db, "guestbook");
+
+  const $ = (id) => document.getElementById(id);
+
+  function setStatus(msg, err = false) {
+    $("status").textContent = msg;
+    $("status").className = err ? "err" : "";
+  }
+
+  function withTimeout(p, ms) {
+    return Promise.race([
+      p,
+      new Promise((_, rej) => setTimeout(() => rej({ code: "timeout" }), ms))
+    ]);
+  }
+
+  async function load() {
+    try {
+      const snap = await withTimeout(
+        getDocs(query(col, orderBy("createdAt", "desc"), limit(50))), 10000
+      );
+      const list = $("entries");
+      list.replaceChildren();
+      if (snap.empty) {
+        const li = document.createElement("li");
+        li.textContent = "No messages yet.";
+        list.append(li);
+        return;
+      }
+      snap.forEach((doc) => {
+        const d = doc.data();
+        const li = document.createElement("li");
+        const b = document.createElement("b");
+        b.textContent = d.name || "Anonymous";
+        const p = document.createElement("span");
+        p.textContent = d.message || "";
+        li.append(b, p);
+        list.append(li);
+      });
+    } catch (e) {
+      console.error(e);
+      $("entries").replaceChildren();
+      const li = document.createElement("li");
+      li.textContent = e.code === "timeout"
+        ? "Can't reach the database (check Firestore setup, rules, and ad blockers)."
+        : "Couldn't load: " + (e.code || e.message);
+      $("entries").append(li);
+    }
+  }
+
+  $("gb-form").addEventListener("submit", async (ev) => {
+    ev.preventDefault();
+    if ($("gb-trap").value) return; // bots fill this in
+
+    const name = $("gb-name").value.trim() || "Anonymous";
+    const message = $("gb-message").value.trim();
+    if (!message) { setStatus("Write a message first.", true); return; }
+
+    $("gb-send").disabled = true;
+    setStatus("Sending...");
+    try {
+      await withTimeout(addDoc(col, { name, message, createdAt: serverTimestamp() }), 10000);
+      $("gb-form").reset();
+      setStatus("Sent!");
+      load();
+    } catch (e) {
+      console.error(e);
+      setStatus(e.code === "timeout" ? "Can't reach the database." : "Error: " + (e.code || e.message), true);
+    } finally {
+      $("gb-send").disabled = false;
+    }
+  });
+
+  load();
+</script>
+
+</body>
+</html>

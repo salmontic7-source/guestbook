@@ -6,149 +6,352 @@
 <title>♡ salmontic's guestbook ♡</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Trebuchet+MS&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Comic+Neue:ital,wght@0,400;0,700;1,700&family=VT323&family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
-  html, body { margin: 0; min-height: 100%; }
+  
+  /* Retro Custom Cursor */
+  html, body, button, input, textarea {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Cpath fill='%23ff5fb0' stroke='%23ffffff' stroke-width='1' d='M0 0l16 8-7 2-2 7z'/%3E%3C/svg%3E"), auto;
+  }
+
+  html, body { 
+    margin: 0; 
+    min-height: 100%; 
+  }
 
   body {
     font-family: 'Comic Neue', 'Trebuchet MS', sans-serif;
     color: #2a0d4a;
-    background: linear-gradient(135deg, #9be8ff 0%, #c9a6ff 45%, #ffb3e0 100%);
+    background: #120024;
+    /* Tiled Retro Background Pattern */
+    background-image: 
+      radial-gradient(#ff79c6 15%, transparent 16%),
+      radial-gradient(#8be9fd 15%, transparent 16%),
+      linear-gradient(135deg, #280a3c 0%, #0d0118 100%);
+    background-size: 60px 60px, 60px 60px, 100% 100%;
+    background-position: 0 0, 30px 30px, 0 0;
     background-attachment: fixed;
     position: relative;
     overflow-x: hidden;
   }
 
+  /* CRT Scanline effect */
+  body::after {
+    content: " ";
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  /* Animated Floating Sparkles */
   body::before {
     content: "✦ ✧ ★ ✦ ✧ ★ ✦ ✧ ★ ✦ ✧ ★ ✦ ✧ ★ ✦ ✧ ★ ✦ ✧ ★";
     position: fixed;
-    inset: 0;
-    color: rgba(255,255,255,0.55);
-    font-size: 22px;
-    line-height: 90px;
-    letter-spacing: 55px;
-    word-spacing: 40px;
+    inset: -50px;
+    color: rgba(255, 255, 255, 0.35);
+    font-size: 24px;
+    line-height: 80px;
+    letter-spacing: 40px;
+    word-spacing: 30px;
     overflow: hidden;
     pointer-events: none;
     z-index: 0;
+    animation: floatingSparkles 20s linear infinite;
   }
 
-  .wrap { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 18px 14px 40px; }
+  @keyframes floatingSparkles {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-80px); }
+  }
 
+  .wrap { 
+    position: relative; 
+    z-index: 1; 
+    max-width: 520px; 
+    margin: 20px auto; 
+    padding: 0 14px 40px; 
+  }
+
+  /* Retro Web Badges Marquee */
+  .badge-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .web-badge {
+    font-family: 'VT323', monospace;
+    font-size: 11px;
+    background: #000;
+    color: #00ff66;
+    border: 1px solid #00ff66;
+    padding: 2px 6px;
+    box-shadow: 2px 2px 0 #000;
+    text-shadow: 0 0 3px #00ff66;
+  }
+  .web-badge.hot {
+    color: #ff3399;
+    border-color: #ff3399;
+    text-shadow: 0 0 3px #ff3399;
+  }
+
+  /* Y2K Window Titlebar */
   .titlebar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 6px 10px;
-    background: linear-gradient(#5b2fb8, #2a0d4a);
-    border: 2px solid #fff;
-    border-radius: 8px 8px 0 0;
+    padding: 6px 12px;
+    background: linear-gradient(90deg, #ff007f, #7928ca, #00d4ff);
+    border: 3px solid #fff;
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
     color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 1px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 10px;
+    box-shadow: 0 -4px 12px rgba(255, 0, 127, 0.4);
+    text-shadow: 1px 1px 0 #000;
   }
   .titlebar span:last-child { display: flex; gap: 4px; }
   .titlebar b {
     display: inline-block;
-    width: 16px; height: 16px;
-    background: linear-gradient(#fff, #ccc);
-    border: 1px solid #2a0d4a;
-    border-radius: 3px;
+    width: 16px; 
+    height: 16px;
+    background: #ffe4e1;
+    border: 1px solid #000;
+    box-shadow: inset -1px -1px 0 #888, inset 1px 1px 0 #fff;
     text-align: center;
     line-height: 14px;
-    color: #2a0d4a;
+    color: #000;
+    font-size: 10px;
+    font-family: sans-serif;
   }
 
   .panel {
-    background: rgba(255,255,255,0.85);
+    background: rgba(255, 240, 245, 0.92);
+    backdrop-filter: blur(4px);
     border: 3px solid #fff;
-    border-top: 0;
-    border-radius: 0 0 14px 14px;
-    box-shadow: 0 8px 0 rgba(90,30,150,0.25), 0 10px 24px rgba(90,30,150,0.35);
-    padding: 16px;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 12px 0 #5b2fb8, 0 16px 30px rgba(0,0,0,0.5);
+    padding: 20px;
   }
 
+  /* Animated Rainbow Glitter Title */
   h1.title {
     text-align: center;
-    margin: 4px 0 2px;
-    font-size: 30px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    background: linear-gradient(180deg, #fff 0%, #d9baff 45%, #a86bff 60%, #5b2fb8 100%);
+    margin: 8px 0 4px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 16px;
+    line-height: 1.4;
+    background: linear-gradient(90deg, #ff0055, #ff5fb0, #9b6bff, #00d4ff, #ff0055);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    text-shadow: 0 2px 0 rgba(90,30,150,0.25);
+    animation: shine 3s linear infinite;
+    text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
   }
-  .subtitle { text-align: center; font-size: 12px; color: #6d3fbf; margin: 0 0 14px; }
-  .blink { animation: blink 1.1s steps(1) infinite; }
+
+  @keyframes shine {
+    to { background-position: 200% center; }
+  }
+
+  .subtitle {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #7928ca;
+    margin: 0 0 14px;
+    letter-spacing: 0.5px;
+  }
+  .blink { animation: blink 0.8s steps(1) infinite; }
   @keyframes blink { 50% { opacity: 0; } }
 
   .divider {
-    height: 6px;
-    margin: 12px 0;
-    border-radius: 3px;
-    background: repeating-linear-gradient(90deg, #ff8fd6 0 10px, #9be8ff 10px 20px, #ffe066 20px 30px);
+    height: 10px;
+    margin: 16px 0;
+    border: 1px solid #fff;
+    border-radius: 5px;
+    background: repeating-linear-gradient(
+      -45deg,
+      #ff79c6,
+      #ff79c6 10px,
+      #8be9fd 10px,
+      #8be9fd 20px,
+      #bd93f9 20px,
+      #bd93f9 30px
+    );
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
   }
 
-  label { display: block; margin-top: 10px; font-size: 12px; font-weight: 700; color: #5b2fb8; letter-spacing: 0.5px; }
+  label {
+    display: block;
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #5b2fb8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
   input[type="text"], textarea {
     width: 100%;
     margin-top: 4px;
-    padding: 9px 10px;
+    padding: 10px 12px;
     font: inherit;
     font-size: 14px;
     color: #2a0d4a;
     background: #fff;
     border: 2px solid #b98bff;
-    border-radius: 10px;
+    border-radius: 8px;
     outline: none;
-    box-shadow: inset 0 2px 4px rgba(90,30,150,0.12);
+    box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1);
+    transition: all 0.2s ease;
   }
-  input[type="text"]:focus, textarea:focus { border-color: #ff5fb0; }
+  input[type="text"]:focus, textarea:focus { 
+    border-color: #ff007f; 
+    box-shadow: inset 2px 2px 4px rgba(0,0,0,0.1), 0 0 8px rgba(255, 0, 127, 0.4);
+  }
   textarea { min-height: 90px; resize: vertical; }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 
+  /* Chunky 3D Skeuomorphic Button */
   .send-btn {
     display: block;
     width: 100%;
-    margin-top: 14px;
-    padding: 12px;
-    font: inherit;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 1px;
+    margin-top: 16px;
+    padding: 14px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 12px;
     color: #fff;
-    background: linear-gradient(180deg, #ff9de2 0%, #ff5fb0 45%, #c9298a 100%);
+    text-shadow: 1px 1px 0 #000;
+    background: linear-gradient(180deg, #ff79c6 0%, #ff007f 50%, #b80058 100%);
     border: 2px solid #fff;
-    border-radius: 999px;
-    box-shadow: 0 4px 0 #a01d69, 0 6px 10px rgba(160,29,105,0.4), inset 0 2px 3px rgba(255,255,255,0.6);
+    border-radius: 12px;
+    box-shadow: 0 6px 0 #700036, 0 8px 12px rgba(0,0,0,0.3);
     cursor: pointer;
+    transition: all 0.1s ease;
   }
-  .send-btn:hover { filter: brightness(1.06); }
-  .send-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #a01d69, inset 0 2px 3px rgba(255,255,255,0.6); }
+  .send-btn:hover { 
+    filter: brightness(1.1); 
+    transform: translateY(-1px);
+    box-shadow: 0 7px 0 #700036, 0 10px 14px rgba(0,0,0,0.35);
+  }
+  .send-btn:active { 
+    transform: translateY(4px); 
+    box-shadow: 0 2px 0 #700036, 0 3px 6px rgba(0,0,0,0.2); 
+  }
   .send-btn:disabled { opacity: 0.6; cursor: wait; }
 
-  #status { margin: 8px 0 0; font-size: 12px; font-weight: 700; text-align: center; min-height: 1.3em; color: #5b2fb8; }
-  #status.err { color: #d6006e; }
-  input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid #ff5fb0; outline-offset: 2px; }
+  #status { 
+    margin: 10px 0 0; 
+    font-size: 13px; 
+    font-weight: 700; 
+    text-align: center; 
+    min-height: 1.3em; 
+    color: #7928ca; 
+  }
+  #status.err { color: #e60000; }
 
-  .counter { margin-top: 16px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; color: #5b2fb8; }
-  .counter .odometer { display: flex; gap: 2px; padding: 3px 6px; background: #000; border-radius: 4px; box-shadow: inset 0 0 4px rgba(0,255,0,0.4); }
-  .counter .odometer span { display: inline-block; width: 14px; text-align: center; font-family: 'Courier New', monospace; font-weight: 700; color: #7CFC00; text-shadow: 0 0 4px #7CFC00; }
+  /* Retro Digital Counter Box */
+  .counter {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: 'VT323', monospace;
+    font-size: 18px;
+    color: #2a0d4a;
+    background: #e6d5ff;
+    padding: 6px 12px;
+    border: 2px dashed #9b6bff;
+    border-radius: 8px;
+  }
+  .counter .odometer {
+    display: flex;
+    gap: 3px;
+    padding: 4px 8px;
+    background: #050505;
+    border: 2px solid #333;
+    border-radius: 4px;
+    box-shadow: inset 0 0 8px rgba(0,255,0,0.6);
+  }
+  .counter .odometer span {
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+    font-family: 'VT323', monospace;
+    font-size: 22px;
+    line-height: 1;
+    color: #00ff66;
+    text-shadow: 0 0 6px #00ff66;
+  }
 
-  #entries { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
-  #entries li { position: relative; padding: 12px 14px; background: linear-gradient(135deg, #fff 0%, #f2e8ff 100%); border: 2px solid #d9baff; border-radius: 14px; box-shadow: 0 3px 0 rgba(90,30,150,0.12); }
-  #entries li.empty { text-align: center; color: #6d3fbf; font-style: italic; }
-  #entries b { display: inline-block; margin-bottom: 4px; padding: 2px 10px; font-size: 13px; color: #fff; background: linear-gradient(90deg, #ff8fd6, #9b6bff); border-radius: 999px; }
-  #entries p { margin: 0; font-size: 14px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; }
+  /* Guestbook Messages Feed */
+  #entries { 
+    list-style: none; 
+    margin: 18px 0 0; 
+    padding: 0; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 14px; 
+  }
+  #entries li {
+    position: relative;
+    padding: 14px 16px;
+    background: #fff;
+    border: 2px solid #c9a6ff;
+    border-radius: 12px;
+    box-shadow: 4px 4px 0px #b98bff;
+    transition: transform 0.2s ease;
+  }
+  #entries li:hover {
+    transform: scale(1.01);
+  }
+  #entries li.empty { 
+    text-align: center; 
+    color: #6d3fbf; 
+    font-style: italic; 
+    box-shadow: none;
+    background: rgba(255, 255, 255, 0.5);
+  }
+  #entries b {
+    display: inline-block;
+    margin-bottom: 6px;
+    padding: 3px 12px;
+    font-size: 12px;
+    color: #fff;
+    background: linear-gradient(90deg, #ff007f, #7928ca);
+    border-radius: 20px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  }
+  #entries p { 
+    margin: 0; 
+    font-size: 14px; 
+    line-height: 1.5; 
+    white-space: pre-wrap; 
+    overflow-wrap: anywhere; 
+    color: #1a0033;
+  }
 </style>
 </head>
 <body>
 
 <div class="wrap">
+  <!-- Retro Badges -->
+  <div class="badge-container">
+    <span class="web-badge">BEST VIEWED IN 800x600</span>
+    <span class="web-badge hot">★ MADE WITH LOVE ★</span>
+    <span class="web-badge">NETSCAPE READY</span>
+  </div>
+
   <div class="titlebar">
     <span>guestbook.exe</span>
     <span><b>_</b><b>□</b><b>×</b></span>
@@ -156,33 +359,33 @@
 
   <div class="panel">
     <h1 class="title">✧ SIGN MY GUESTBOOK ✧</h1>
-    <p class="subtitle">est. 2026 <span class="blink">●</span> leave ur mark below</p>
+    <p class="subtitle">est. 2026 <span class="blink">★</span> leave ur mark below <span class="blink">★</span></p>
 
     <div class="divider"></div>
 
     <form id="gb-form" autocomplete="off">
       <label for="gb-name">✎ your name</label>
-      <input type="text" id="gb-name" maxlength="40" placeholder="Anonymous">
+      <input type="text" id="gb-name" maxlength="40" placeholder="Anonymous cyber-visitor">
 
       <label for="gb-message">✎ your message</label>
-      <textarea id="gb-message" maxlength="500" required placeholder="say hii~"></textarea>
+      <textarea id="gb-message" maxlength="500" required placeholder="say hii~ leave a cute note! ♡"></textarea>
 
       <div class="hp" aria-hidden="true">
         <input type="text" id="gb-trap" name="zq_note_x" tabindex="-1" autocomplete="off">
       </div>
 
-      <button type="submit" class="send-btn" id="gb-send">☆ SEND ☆</button>
+      <button type="submit" class="send-btn" id="gb-send">★ SEND MESSAGE ★</button>
       <p id="status" role="status"></p>
     </form>
 
     <div class="divider"></div>
 
     <div class="counter">
-      you are visitor #
+      YOU ARE VISITOR #
       <span class="odometer" id="odo"></span>
     </div>
 
-    <ol id="entries"><li class="empty">Loading...</li></ol>
+    <ol id="entries"><li class="empty">Loading posts...</li></ol>
   </div>
 </div>
 
